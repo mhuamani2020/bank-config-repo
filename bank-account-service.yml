@@ -10,8 +10,8 @@ spring:
 # URLs que consumen CustomerClientAdapter y CreditClientAdapter
 app:
   urls:
-    customer-service: "http://customer-service/customers/"
-    credit-service: "http://credit-service/credits/"
+    customer-service: "http://localhost:8081/customers/"
+    credit-service: "http://localhost:8083/credits/"
 
 # Descubrimiento de servicios con Eureka
 eureka:
