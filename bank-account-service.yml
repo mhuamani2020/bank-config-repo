@@ -4,3 +4,15 @@ spring:
       uri: mongodb://localhost:27017/bank_account_db
 server:
   port: 8082
+resilience4j:
+  circuitbreaker:
+    instances:
+      creditServiceCB:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+  timelimiter:
+    instances:
+      creditServiceCB:
+        timeoutDuration: 2s
