@@ -4,3 +4,6 @@ spring:
       uri: mongodb://localhost:27017/credit_db
 server:
   port: 8083
+app:
+  urls:
+    customer-service: "http://localhost:8081/customers/"
