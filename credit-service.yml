@@ -7,3 +7,31 @@ server:
 app:
   urls:
     customer-service: "http://localhost:8081/customers/"
+
+# ==========================================================================
+# Estándar de resiliencia (circuit breakers) — bank-resilience-commons
+# Instancia: customerServiceCB (-> customer-service)
+# Regla obligatoria: minimumNumberOfCalls <= slidingWindowSize
+# Estas anotaciones @CircuitBreaker/@TimeLimiter toman su configuración de aquí.
+# ==========================================================================
+resilience4j:
+  circuitbreaker:
+    instances:
+      customerServiceCB:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  timelimiter:
+    instances:
+      customerServiceCB:
+        timeoutDuration: 2s
+        cancelRunningFuture: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,circuitbreakers,circuitbreakerevents

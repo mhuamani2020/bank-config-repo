@@ -23,22 +23,40 @@ eureka:
   instance:
     prefer-ip-address: true
 
-# Tolerancia a fallos con Resilience4j
+# ==========================================================================
+# Estándar de resiliencia (circuit breakers) — bank-resilience-commons
+# Instancias: customerServiceCB (-> customer-service), creditServiceCB (-> credit-service)
+# Regla obligatoria: minimumNumberOfCalls <= slidingWindowSize
+# Estas anotaciones @CircuitBreaker/@TimeLimiter toman su configuración de aquí.
+# ==========================================================================
 resilience4j:
   circuitbreaker:
     instances:
+      customerServiceCB:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
       creditServiceCB:
         slidingWindowSize: 10
+        minimumNumberOfCalls: 5
         failureRateThreshold: 50
-        waitDurationInOpenState: 10000
+        waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
   timelimiter:
     instances:
+      customerServiceCB:
+        timeoutDuration: 2s
+        cancelRunningFuture: true
       creditServiceCB:
         timeoutDuration: 2s
+        cancelRunningFuture: true
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,circuitbreakers
+        include: health,info,metrics,circuitbreakers,circuitbreakerevents
