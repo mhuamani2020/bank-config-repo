@@ -6,12 +6,39 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/bank_account_db
       auto-index-creation: true
+  # ========================================================================
+  # Kafka (Parte III) — arquitectura orientada a eventos
+  # ========================================================================
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: bank-account-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 # URLs que consumen CustomerClientAdapter y CreditClientAdapter
 app:
   urls:
     customer-service: "http://localhost:8081/customers/"
     credit-service: "http://localhost:8083/credits/"
+  accounts:
+    # Requerimiento Parte II: monto mínimo de apertura de las cuentas bancarias.
+    # Puede ser cero (cuentas abribles sin monto inicial mínimo).
+    minimum-opening-amount: 0.0
+  # Parte III: arquitectura orientada a eventos con Kafka como message broker.
+  kafka:
+    topics:
+      account-transactions: bank-account-transactions
+      wallet-operations: wallet-operations
+      wallet-operation-results: wallet-operation-results
+  jwt:
+    # Clave simétrica compartida con auth-service para validar la firma del JWT
+    # (este servicio actúa como OAuth2 Resource Server).
+    secret: "bank-system-super-secret-key-for-jwt-hs256-2026-nttdata"
 
 # Descubrimiento de servicios con Eureka
 eureka:

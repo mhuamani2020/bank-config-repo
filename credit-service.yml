@@ -2,11 +2,27 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/credit_db
+  # ========================================================================
+  # Kafka (Parte III) — arquitectura orientada a eventos
+  # ========================================================================
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 server:
   port: 8083
 app:
   urls:
     customer-service: "http://localhost:8081/customers/"
+  # Parte III: arquitectura orientada a eventos con Kafka como message broker.
+  kafka:
+    topics:
+      credit-movements: credit-movements
+  jwt:
+    # Clave simétrica compartida con auth-service para validar la firma del JWT
+    # (este servicio actúa como OAuth2 Resource Server).
+    secret: "bank-system-super-secret-key-for-jwt-hs256-2026-nttdata"
 
 # ==========================================================================
 # Estándar de resiliencia (circuit breakers) — bank-resilience-commons

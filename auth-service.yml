@@ -1,0 +1,37 @@
+server:
+  port: 8084
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/auth_db
+
+# ==========================================================================
+# Autenticación / autorización con JWT (Parte III).
+# La clave simétrica app.jwt.secret la comparten auth-service (firma el token)
+# y los microservicios de negocio (lo validan como OAuth2 Resource Server).
+# ==========================================================================
+app:
+  jwt:
+    secret: "bank-system-super-secret-key-for-jwt-hs256-2026-nttdata"
+    issuer: "bank-system"
+    expiration-seconds: 3600
+  default-user:
+    username: admin
+    password: admin123
+    role: ADMIN
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

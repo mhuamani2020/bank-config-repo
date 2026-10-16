@@ -2,5 +2,23 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/customer_db
+    # ======================================================================
+    # Redis (Parte III) — caché de datos maestros (catálogo de clientes)
+    # ======================================================================
+    redis:
+      host: localhost
+      port: 6379
 server:
   port: 8081
+
+# ==========================================================================
+# Autenticación con JWT (Parte III). La clave simétrica app.jwt.secret es la
+# misma con la que auth-service firma los tokens; aquí se usa para validarlos
+# como OAuth2 Resource Server.
+# ==========================================================================
+app:
+  cache:
+    # Tiempo de vida (segundos) de las entradas del catálogo de clientes en Redis.
+    customer-ttl-seconds: 300
+  jwt:
+    secret: "bank-system-super-secret-key-for-jwt-hs256-2026-nttdata"
